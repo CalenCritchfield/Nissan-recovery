@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nissen Fundoplication Recovery Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🏥 Nissen Fundoplication Recovery Tracker</h1>
+        <p>
+          Track your recovery journey and share insights with your healthcare
+          provider
+        </p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('new-entry')">
+          New Entry
+        </button>
+        <button class="tab" onclick="showTab('view-entries')">
+          View Entries
+        </button>
+        <button class="tab" onclick="showTab('progress')">
+          Progress Chart
+        </button>
+        <button class="tab" onclick="showTab('export')">Export Data</button>
+      </div>
+
+      <div class="content">
+        <!-- New Entry Tab -->
+        <div id="new-entry" class="tab-content active">
+          <h2 style="margin-bottom: 20px; color: #333">Add Daily Entry</h2>
+          <form id="entryForm">
+            <div class="form-group">
+              <label for="entryDate">Date</label>
+              <input type="date" id="entryDate" required />
+            </div>
+
+            <div class="form-group">
+              <label for="foods">Foods Eaten</label>
+              <textarea
+                id="foods"
+                placeholder="List all foods and beverages consumed today..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="medicines">Medications Taken</label>
+              <textarea
+                id="medicines"
+                placeholder="List medications, dosages, and times taken..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="symptoms">Symptoms Experienced</label>
+              <textarea
+                id="symptoms"
+                placeholder="Describe any symptoms: pain, difficulty swallowing, bloating, nausea, etc..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="feeling">Overall Day Feeling</label>
+              <select id="feeling" required>
+                <option value="">Select feeling...</option>
+                <option value="great">Great - Feeling excellent</option>
+                <option value="good">Good - Feeling well</option>
+                <option value="okay">Okay - Managing</option>
+                <option value="poor">Poor - Struggling</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Additional Notes</label>
+              <textarea
+                id="notes"
+                placeholder="Any other observations, activities, or concerns..."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn">Save Entry</button>
+          </form>
+        </div>
+
+        <!-- View Entries Tab -->
+        <div id="view-entries" class="tab-content">
+          <h2 style="margin-bottom: 20px; color: #333">
+            Your Recovery Journal
+          </h2>
+          <div id="entriesList"></div>
+        </div>
+
+        <!-- Progress Chart Tab -->
+        <div id="progress" class="tab-content">
+          <h2 style="margin-bottom: 20px; color: #333">Recovery Progress</h2>
+          <div style="background: #f9f9f9; padding: 20px; border-radius: 10px">
+            <canvas id="progressChart" style="max-height: 400px"></canvas>
+          </div>
+          <div
+            style="
+              margin-top: 20px;
+              padding: 15px;
+              background: #e8f5e9;
+              border-radius: 8px;
+              border-left: 4px solid #11998e;
+            "
+          >
+            <p style="margin: 0 0 10px 0; color: #555">
+              <strong>How to read this chart:</strong> Compare your actual
+              progress (solid green line) against the expected recovery timeline
+              (dashed orange line).
+            </p>
+            <p style="margin: 0; color: #555; font-size: 14px">
+              <strong>Expected Recovery Timeline:</strong><br />
+              • Weeks 1-2: Poor - Significant discomfort and adjustment<br />
+              • Weeks 3-4: Okay - Gradual improvement, still some difficulty<br />
+              • Weeks 5-8: Good - Notable improvement in daily activities<br />
+              • Week 9+: Great - Approaching full recovery
+            </p>
+          </div>
+        </div>
+
+        <!-- Export Tab -->
+        <div id="export" class="tab-content">
+          <h2 style="margin-bottom: 20px; color: #333">Export Your Data</h2>
+          <div class="export-section">
+            <h3 style="margin-bottom: 15px">Generate PDF Report</h3>
+            <p style="color: #666; margin-bottom: 20px">
+              Create a comprehensive PDF report of all your entries to share
+              with your doctor. This report will include all foods, medications,
+              symptoms, and daily feelings.
+            </p>
+            <button class="btn" onclick="exportToPDF()">
+              📄 Generate PDF Report
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
