@@ -1,3 +1,15 @@
+// Service Worker Registration
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("sw.js")
+      .then((registration) =>
+        console.log("Service Worker registered successfully")
+      )
+      .catch((err) => console.log("Service Worker registration failed:", err));
+  });
+}
+
 let entries = [];
 let progressChart = null;
 
@@ -58,80 +70,81 @@ function displayEntries() {
 
   if (entries.length === 0) {
     container.innerHTML = `
-                    <div class="empty-state">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <h3>No entries yet</h3>
-                        <p>Start tracking your recovery by adding your first entry</p>
-                    </div>
-                `;
+            <div class="empty-state">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h3>No entries yet</h3>
+                <p>Start tracking your recovery by adding your first entry</p>
+            </div>
+        `;
     return;
   }
 
   container.innerHTML = entries
     .map(
       (entry) => `
-                <div class="entry-card">
-                    <div class="entry-header">
-                        <span class="entry-date">${formatDate(
-                          entry.date
-                        )}</span>
-                        <div>
-                            <span class="entry-feeling feeling-${
-                              entry.feeling
-                            }">${capitalizeFirst(entry.feeling)}</span>
-                            <button class="delete-btn" onclick="deleteEntry(${
-                              entry.id
-                            })">Delete</button>
-                        </div>
-                    </div>
-                    
-                    ${
-                      entry.foods
-                        ? `
-                        <div class="entry-section">
-                            <h4>🍽️ Foods Eaten</h4>
-                            <p>${entry.foods}</p>
-                        </div>
-                    `
-                        : ""
-                    }
-                    
-                    ${
-                      entry.medicines
-                        ? `
-                        <div class="entry-section">
-                            <h4>💊 Medications</h4>
-                            <p>${entry.medicines}</p>
-                        </div>
-                    `
-                        : ""
-                    }
-                    
-                    ${
-                      entry.symptoms
-                        ? `
-                        <div class="entry-section">
-                            <h4>⚠️ Symptoms</h4>
-                            <p>${entry.symptoms}</p>
-                        </div>
-                    `
-                        : ""
-                    }
-                    
-                    ${
-                      entry.notes
-                        ? `
-                        <div class="entry-section">
-                            <h4>📝 Notes</h4>
-                            <p>${entry.notes}</p>
-                        </div>
-                    `
-                        : ""
-                    }
+        <div class="entry-card">
+            <div class="entry-header">
+                <span class="entry-date">${formatDate(entry.date)}</span>
+                <div class="entry-actions">
+                    <span class="entry-feeling feeling-${
+                      entry.feeling
+                    }">${capitalizeFirst(entry.feeling)}</span>
+                    <button class="btn-edit" onclick="editEntry(${
+                      entry.id
+                    })">Edit</button>
+                    <button class="delete-btn" onclick="deleteEntry(${
+                      entry.id
+                    })">Delete</button>
+                </div>
+            </div>
+            
+            ${
+              entry.foods
+                ? `
+                <div class="entry-section">
+                    <h4>🍽️ Foods Eaten</h4>
+                    <p>${entry.foods}</p>
                 </div>
             `
+                : ""
+            }
+            
+            ${
+              entry.medicines
+                ? `
+                <div class="entry-section">
+                    <h4>💊 Medications</h4>
+                    <p>${entry.medicines}</p>
+                </div>
+            `
+                : ""
+            }
+            
+            ${
+              entry.symptoms
+                ? `
+                <div class="entry-section">
+                    <h4>⚠️ Symptoms</h4>
+                    <p>${entry.symptoms}</p>
+                </div>
+            `
+                : ""
+            }
+            
+            ${
+              entry.notes
+                ? `
+                <div class="entry-section">
+                    <h4>📝 Notes</h4>
+                    <p>${entry.notes}</p>
+                </div>
+            `
+                : ""
+            }
+        </div>
+    `
     )
     .join("");
 }
@@ -142,6 +155,34 @@ function deleteEntry(id) {
     saveEntries();
     displayEntries();
   }
+}
+
+function editEntry(id) {
+  const entry = entries.find((e) => e.id === id);
+  if (!entry) return;
+
+  document.getElementById("entryDate").value = entry.date;
+  document.getElementById("foods").value = entry.foods;
+  document.getElementById("medicines").value = entry.medicines;
+  document.getElementById("symptoms").value = entry.symptoms;
+  document.getElementById("feeling").value = entry.feeling;
+  document.getElementById("notes").value = entry.notes;
+
+  entries = entries.filter((e) => e.id !== id);
+  saveEntries();
+
+  document
+    .querySelectorAll(".tab")
+    .forEach((tab) => tab.classList.remove("active"));
+  document
+    .querySelectorAll(".tab-content")
+    .forEach((content) => content.classList.remove("active"));
+  document.querySelector(".tab:first-child").classList.add("active");
+  document.getElementById("new-entry").classList.add("active");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  alert("Entry loaded for editing. Make your changes and click Save Entry.");
 }
 
 function formatDate(dateString) {
@@ -185,7 +226,6 @@ function renderProgressChart() {
     great: 4,
   };
 
-  // Calculate days since first entry for expected recovery curve
   const firstDate = new Date(sortedEntries[0].date + "T00:00:00");
 
   const labels = sortedEntries.map((entry) => {
@@ -195,8 +235,6 @@ function renderProgressChart() {
 
   const actualData = sortedEntries.map((entry) => feelingValues[entry.feeling]);
 
-  // Expected recovery curve based on typical Nissen fundoplication recovery
-  // Week 1-2: Poor (1), Week 3-4: Okay (2), Week 5-8: Good (3), Week 9+: Great (4)
   const expectedData = sortedEntries.map((entry) => {
     const date = new Date(entry.date + "T00:00:00");
     const daysSinceSurgery = Math.floor(
@@ -204,17 +242,13 @@ function renderProgressChart() {
     );
 
     if (daysSinceSurgery <= 14) {
-      // Week 1-2: Poor to Okay
-      return 1 + (daysSinceSurgery / 14) * 1; // Gradually from 1 to 2
+      return 1 + (daysSinceSurgery / 14) * 1;
     } else if (daysSinceSurgery <= 28) {
-      // Week 3-4: Okay to Good
-      return 2 + ((daysSinceSurgery - 14) / 14) * 1; // Gradually from 2 to 3
+      return 2 + ((daysSinceSurgery - 14) / 14) * 1;
     } else if (daysSinceSurgery <= 56) {
-      // Week 5-8: Good
-      return 3 + ((daysSinceSurgery - 28) / 28) * 0.5; // Gradually from 3 to 3.5
+      return 3 + ((daysSinceSurgery - 28) / 28) * 0.5;
     } else {
-      // Week 9+: Good to Great
-      return 3.5 + Math.min((daysSinceSurgery - 56) / 28, 0.5); // Gradually approach 4
+      return 3.5 + Math.min((daysSinceSurgery - 56) / 28, 0.5);
     }
   });
 
@@ -334,6 +368,30 @@ function exportToPDF() {
   doc.setFont(undefined, "normal");
   doc.text(`Generated: ${new Date().toLocaleDateString()}`, margin, yPos);
   yPos += 15;
+
+  doc.setFontSize(14);
+  doc.setFont(undefined, "bold");
+  doc.text("Recovery Progress Chart", margin, yPos);
+  yPos += 10;
+
+  const canvas = document.getElementById("progressChart");
+  if (canvas) {
+    const chartImage = canvas.toDataURL("image/png");
+    const imgWidth = 170;
+    const imgHeight = 80;
+    doc.addImage(chartImage, "PNG", margin, yPos, imgWidth, imgHeight);
+    yPos += imgHeight + 15;
+  }
+
+  if (yPos > pageHeight - 40) {
+    doc.addPage();
+    yPos = 20;
+  }
+
+  doc.setFontSize(14);
+  doc.setFont(undefined, "bold");
+  doc.text("Daily Entries", margin, yPos);
+  yPos += 10;
 
   entries.forEach((entry, index) => {
     if (yPos > pageHeight - 40) {

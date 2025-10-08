@@ -8,7 +8,7 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
   min-height: 100vh;
-  padding: 20px;
+  padding: 10px;
 }
 
 .container {
@@ -23,37 +23,55 @@ body {
 .header {
   background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
   color: white;
-  padding: 30px;
+  padding: 20px;
   text-align: center;
 }
 
 .header h1 {
-  font-size: 28px;
+  font-size: 24px;
   margin-bottom: 10px;
 }
 
 .header p {
   opacity: 0.9;
-  font-size: 14px;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 5px;
+  }
+
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .header p {
+    font-size: 12px;
+  }
 }
 
 .tabs {
   display: flex;
   background: #f5f5f5;
   border-bottom: 2px solid #e0e0e0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tab {
   flex: 1;
-  padding: 15px;
+  min-width: 100px;
+  padding: 15px 10px;
   text-align: center;
   cursor: pointer;
   background: #f5f5f5;
   border: none;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #666;
   transition: all 0.3s;
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -66,8 +84,22 @@ body {
   border-bottom: 3px solid #11998e;
 }
 
+@media (max-width: 768px) {
+  .tab {
+    font-size: 12px;
+    padding: 12px 8px;
+    min-width: 80px;
+  }
+}
+
 .content {
-  padding: 30px;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 15px;
+  }
 }
 
 .tab-content {
@@ -141,6 +173,40 @@ textarea {
   margin-left: 10px;
 }
 
+.btn-edit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 5px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-edit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-edit:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .btn-secondary {
+    margin-left: 5px;
+    margin-top: 10px;
+  }
+}
+
 .entry-card {
   background: #f9f9f9;
   border: 2px solid #e0e0e0;
@@ -162,12 +228,32 @@ textarea {
   margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 2px solid #e0e0e0;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .entry-date {
   font-weight: 700;
   color: #11998e;
   font-size: 18px;
+}
+
+.entry-actions {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .entry-date {
+    font-size: 16px;
+  }
+
+  .entry-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }
 
 .entry-feeling {
@@ -225,6 +311,14 @@ textarea {
   background: #c82333;
 }
 
+@media (max-width: 768px) {
+  .delete-btn,
+  .btn-edit {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
 .empty-state {
   text-align: center;
   padding: 60px 20px;
@@ -249,4 +343,44 @@ textarea {
   display: flex;
   gap: 10px;
   margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group .btn {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+}
+
+footer {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  text-align: center;
+  padding: 15px 20px;
+  font-size: 14px;
+  margin-top: 0;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+  transition: border-color 0.3s;
+}
+
+footer a:hover {
+  border-bottom-color: white;
+}
+
+@media (max-width: 768px) {
+  footer {
+    font-size: 12px;
+    padding: 12px 15px;
+  }
 }
